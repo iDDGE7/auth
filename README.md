@@ -4,6 +4,7 @@
 ## Usefull information
 ### Usefull tools
 - Postam (or other API Client) for REST calls.
+
 ### API schema
 | Path             |  Verb  | Description                                 | Auth |
 | ---------------- |:------:|:------------------------------------------- |:----:|
@@ -13,6 +14,9 @@
 | `/auth/register` | `POST` | Create an user                              |  No  |
 | `/users`         | `GET`  | Return all users                            |  Yes |
 | `/users/me`      | `GET`  | Return the user information                 |  Yes |
+| `/users/me`      | `PUT`  | Update the user information                 |  Yes |
+| `/users/me`      |`DELETE`| Delete the user                             |  Yes |
+
 ### Auth flow
 ![Auth flow](./images/Auth_flowchart.png)
 
@@ -48,7 +52,8 @@ $ npm run dev
 
 ### B) Write the code
 ***
-This steps are the real challenge
+This steps are the real challenge.
+
 #### **ENV configuration**
 You will need to add some environment variables.
 > **Inv:** How to use dotenv
@@ -62,6 +67,7 @@ MONGODB_URI=theurlconnection
 JWT_SECRET=whateveryouwanttogeneratetoken
 TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
 ```
+
 #### **Registration**
 - **Connect to mongo:**
   > **Inv:** How to create a cluster on Atlas \
@@ -79,8 +85,9 @@ TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
   firstname: string // required
   lastname: string // required
   email: string // required
+  [Opt] deleted: boolean
   ```
-  (**Note**: *On create you need to encrypt the password and on login you need to decrypt*)
+  (**Note**: *On create you need to encrypt the password and on login you need to compare the password*)
   > **Inv:** Pre methods for `mongoose` models \
   > **Inv:** How to use `bcrypt` (`hashSync`) \
   > **Inv:** How to use `bcrypt` (`compareSync`)
@@ -94,6 +101,7 @@ TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
   Create CRUD operations for User model using the rigth http verb [`GET`, `POST`, `PUT`, `DELETE`]
   
   _(See `src/api/main` for `GET` examples and project organization.)_
+
 #### **Auhtentication**
 - **Get username & password from request:**
 
@@ -105,7 +113,7 @@ TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
   
   *If no user found or invalid password send `Unauthorized (401)`* 
 
-  (_See User Model & User Service step for more information_).
+  (_See User Model & CRUD endpoints step for more information_).
 
 - **Generate token:**
   > **Inv:** Generate a token using `jsonwebtoken`
@@ -119,6 +127,7 @@ TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
     exp: Date.now() + (Number(process.env.TOKEN_EXPIRES_IN) * 60), // 30min from that moment
   }, process.env.SECRET);
   ```
+
 #### **Authorization (middleware)**
 > **Inv:** How middleware works
 - **Retrive token:**
@@ -138,7 +147,10 @@ TOKEN_EXPIRES_IN=1800 // 1800s = 30min... I think
       // Continue the request
   });
   ```
-  *If error on token send `Forbidden (403)`*
+  *If error on token send `Forbidden (403)`.*
+  
+  *If no token provided send `Unauthorized (401)`*
+
 #### **Deploy to heroku**
 - **Add `start` script on package.json**
 - **Create an new app from heroku console**
