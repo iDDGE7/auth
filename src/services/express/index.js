@@ -9,7 +9,12 @@ module.exports = (apiRoot, routes) => {
   app.use(morgan('dev'))
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
-  app.use(apiRoot, routes);
+
+  // >>> Here is where all the routes
+  // are register on the app.
+  //
+  // A) Uncomment this line:
+  // app.use(apiRoot, routes);
   
   return app;
 }

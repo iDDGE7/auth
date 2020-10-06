@@ -31,11 +31,14 @@ $ npm install
 ```
 
 #### **Uncomment the marked lines:**
-(**Note**: *There are six lines to uncomment*)
+(**Note**: *There are aprox. 22 lines to uncomment*)
 
 Files where are commented lines:
 - `src/api/main/index.js` (2 line)
 - `src/api/index.js` (2 lines)
+- `src/services/express/index.js` (1 lines)
+- `src/services/mongoose/index.js` (3 lines)
+- `src/config.js` (12 lines)
 - `src/app.js` (2 lines)
 
 ##### Example for `src/api/main/index.js`:
