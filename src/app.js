@@ -10,15 +10,30 @@ const api = require('./api');
 // server start running
 //
 // A) Uncomment this lines:
-// const app = express(apiRoot, api);
-// const server = http.createServer(app);
+const app = express(apiRoot, api);
+const server = http.createServer(app);
 
 
 
 // >> Here will be the connection
 // to mongodb.
 
+mongoose
+  .connect(mongo.uri, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  .then((db) => {
+    console.log("Successfully Established Connection with MongoDB");
+  })
+  .catch((err) => {
+    console.log(`Failed to Establish Connection with MongoDB with Error: ${err}`);
+  });
 
+
+// console.log(mongo.uri)
 
 setImmediate(() => {
   server.listen(port, ip, () => {
