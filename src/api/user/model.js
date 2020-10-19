@@ -27,19 +27,20 @@ const UserSchema = new Schema({
 });
 
 // >> Here will be the pre methods for the schema.
-UserSchema.pre("", () => {});
+UserSchema.pre("save", function (next) {
+  const hash = bcrypt.hashSync(this.password, 12);
+  this.password = hash;
+  next();
+});
 
 // >> Here will be the User methods for the schema.
-UserSchema.methods = {
-  encryptPassword: async (password) => {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
-  },
-  matchPassword: async (password) => {
-    return await bcrypt.compare(password, this.password);
-  },
-};
+UserSchema.methods.validatePassword = function(password) {
+    console.log(password);
+    console.log(this.password);
+    
+    // return bcrypt.compareSync(password, this.password);
+   
+  }
 
 // >> Here will be the User model using the User schema.
 const UserModel = mongoose.model("User", UserSchema);

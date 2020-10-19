@@ -10,7 +10,7 @@ const router = new Router();
 // registration
 
 const user = require("./user");
-const auth = require("./auth/index");
+const auth = require("./auth");
 
 // A) Uncomment this line:
 router.use(main.path, main.router);
