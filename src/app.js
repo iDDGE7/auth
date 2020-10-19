@@ -19,7 +19,7 @@ const server = http.createServer(app);
 // to mongodb.
 
 mongoose
-  .connect(mongo.uri, {
+  .connect(mongo.uri, { 
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
