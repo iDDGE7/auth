@@ -1,7 +1,7 @@
 const AuthController = {};
 const { model } = require("../user/model");
+const { tokenGen } = require("../../services/jwt");
 const path = "/auth";
-
 // >> Here will be the
 // endpoints for the Users.
 
@@ -9,7 +9,7 @@ AuthController.index = (req, res) => {
   let base_uri = req.protocol + "://" + req.hostname + path;
   res.json({
     register: `${base_uri}`,
-    login: `${base_uri}/login`,
+    login: `${base_uri}/login`
   });
 };
 
@@ -18,10 +18,12 @@ AuthController.register = async (req, res) => {
 
   await user
     .save()
-    .then(() => {
+    .then(user => {
+      console.log(user);
       res.status(200).json({ msg: "User Created" });
     })
-    .catch((e) => {
+    .catch(e => {
+      console.log(e);
       res.status(201).json({ msg: `There was an error ${e.message}` });
     });
 };
@@ -29,14 +31,10 @@ AuthController.register = async (req, res) => {
 AuthController.login = async (req, res) => {
   let { username, password } = req.body;
 
-  user = await model.findOne({ username: username }).then(async (user) => {
-    const match = await user.validatePassword(password);
-    if (match) {
-      res.status(200).json({ msg: "match!" });
-    } else {
-      res.status(401).json({ msg: "Unauthorized" });
-    }
-  });
+  model.findOne({ username: username }).then((user) => user ? user : null)
+  .then((user) =>  user.validatePassword(password) ? tokenGen(user) : null)
+  .then((token) =>  res.status(200).json({ token: token }))
+  .catch((err) => res.status(401).json({ err}));
 };
 
 module.exports = AuthController;
