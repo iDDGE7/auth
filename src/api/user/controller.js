@@ -4,10 +4,12 @@ const { model } = require("./model");
 // endpoints for the Users.
 
 UserController.getAllUsers = (req, res) => {
-  model.find({}, { username: 1, password: 1, __v: 1 }).then((users) => {
+  model
+    .find({}, { username: 1, password: 1, __v: 1 })
+    .then(users => {
       res.status(200).json(users);
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json(err);
     });
 };
@@ -15,31 +17,40 @@ UserController.getAllUsers = (req, res) => {
 UserController.getOneUser = (req, res) => {
   let { id } = req.params;
 
-  model.findById(id, { username: 1, password: 1, __v: 1 }).then((user) => {
+  model
+    .findById(id, {
+      username: 1,
+      password: 1,
+      firstname: 1,
+      lastname: 1,
+      email: 1
+    })
+    .then(user => {
       res.status(200).json(user);
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json(err);
     });
 };
 
 UserController.updateUser = (req, res) => {
   let { id } = req.params;
-  model.updateOne({_id:  id},req.body).then((user) => {
+  model
+    .updateOne({ _id: id }, req.body)
+    .then(user => {
       res.status(200).json(user);
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json(err);
     });
 };
 
-
 UserController.deleteUser = (req, res) => {
-    let { id } = req.params;
-    model.findByIdAndDelete(id).
-    then(user =>  res.status(200).json(user))
+  let { id } = req.params;
+  model
+    .findByIdAndDelete(id)
+    .then(user => res.status(200).json(user))
     .catch(err => res.status(400).json(err));
-  };
-  
+};
 
 module.exports = UserController;

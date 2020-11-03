@@ -8,11 +8,10 @@ const tokenGen = user => {
   const payload = {
     username: user.username,
     firstname: user.firstname,
-    lastname: user.lastname,
-    exp: 1440
+    lastname: user.lastname
   };
 
-  return jwt.sign(payload, jwtSecret, { algorithm: "HS256" });
+  return jwt.sign(payload, jwtSecret, { expiresIn: 60 * 60 });
 };
 
 module.exports = { tokenGen };

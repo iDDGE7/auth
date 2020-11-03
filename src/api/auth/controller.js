@@ -1,6 +1,8 @@
 const AuthController = {};
 const { model } = require("../user/model");
 const { tokenGen } = require("../../services/jwt");
+const { jwtSecret } = require("../../config");
+const jwt = require("jsonwebtoken");
 const path = "/auth";
 // >> Here will be the
 // endpoints for the Users.
@@ -31,10 +33,16 @@ AuthController.register = async (req, res) => {
 AuthController.login = async (req, res) => {
   let { username, password } = req.body;
 
-  model.findOne({ username: username }).then((user) => user ? user : null)
-  .then((user) =>  user.validatePassword(password) ? tokenGen(user) : null)
-  .then((token) =>  res.status(200).json({ token: token }))
-  .catch((err) => res.status(401).json({ err}));
+  model
+    .findOne({ username: username })
+    .then(user => (user ? user : null))
+    .then(user => (user.validatePassword(password) ? tokenGen(user) : null))
+    .then(token => {
+      res.json({
+        access_token: token
+      });
+    })
+    .catch(err => res.status(401).json({ err }));
 };
 
 module.exports = AuthController;
